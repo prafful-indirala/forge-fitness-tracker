@@ -7,9 +7,11 @@ const plan={
 5:{title:"Visual Muscle Day",emoji:"🔥",mission:"Shoulders, arms, lower chest detail and whole forearm thickness.",ex:[["Machine shoulder press",3,"8–10",90,"Strong shoulders."],["Dumbbell lateral raise",4,"12–15",50,"Strict side delts."],["Cable lateral raise",3,"12–15",50,"Stretch and pump."],["Rear delt fly",4,"12–15",60,"Rear shoulders."],["Incline machine press",3,"10",90,"Moderate chest top-up."],["High-to-low cable fly",4,"12–15",60,"Lower chest priority."],["Assisted dips / dip machine",3,"8–10",75,"Clean reps."],["Push-up finisher",2,"Near failure",75,"Stop 1–2 reps before form breaks."],["EZ bar curl",3,"10–12",60,"Biceps."],["Rope hammer curl",3,"12",60,"Arms + forearms."],["Rope triceps pushdown",3,"12–15",60,"Triceps."],["Palm-side wrist curl",3,"12–15",45,"Forearm flexors."],["Reverse wrist curl",2,"15",45,"Top-side balance."]]},
 6:{title:"5K + Abs",emoji:"🏃",mission:"Stamina and waist work without sacrificing size.",recovery:["5–8 min warm-up walk","5KM comfortable run — only if knee is pain-free","If knee isn't perfect: 25–35 min bike, incline walk or swim","Cable crunch 3 × 12–15","Dead bug 3 × 10/side","Side plank 2 × 30–45 sec/side"]}
 };
-let state=JSON.parse(localStorage.getItem("forge")||"{}"),view="today",timer=null,remaining=0,activeExercise=0;
+let state={},view="today",timer=null,remaining=0,activeExercise=0;
+try{state=JSON.parse(localStorage.getItem("forge")||"{}")||{}}catch(e){state={};try{localStorage.removeItem("forge")}catch(_){}}
+window.addEventListener("error",function(e){var a=document.querySelector("#app");if(a&&!a.innerHTML.trim())a.innerHTML='<div style="padding:40px 20px;color:white;font-family:system-ui"><h2>Forge is recovering…</h2><p style="color:#9aa3b2">Refresh once to continue.</p></div>'});
 const key=()=>{let d=new Date(),m=String(d.getMonth()+1).padStart(2,"0"),day=String(d.getDate()).padStart(2,"0");return d.getFullYear()+"-"+m+"-"+day};
-const save=()=>localStorage.setItem("forge",JSON.stringify(state));
+const save=()=>{try{localStorage.setItem("forge",JSON.stringify(state))}catch(e){}};
 const day=()=>plan[new Date().getDay()];
 const ds=()=>state[key()]||(state[key()]={sets:{},done:{},nutrition:{}});
 function toast(t){let x=document.querySelector("#toast");x.textContent=t;x.classList.add("show");setTimeout(()=>x.classList.remove("show"),1500)}
