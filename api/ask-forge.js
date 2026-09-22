@@ -8,7 +8,9 @@ function reply(response,status,payload){
 
 export default async function handler(request,response){
  if(request.method!=="POST")return reply(response,405,{error:"Method not allowed."});
- const token=process.env.AI_GATEWAY_API_KEY||process.env.VERCEL_OIDC_TOKEN;
+ const openAIKey=process.env.OPENAI_API_KEY;
+ const gatewayToken=process.env.AI_GATEWAY_API_KEY||process.env.VERCEL_OIDC_TOKEN;
+ const token=openAIKey||gatewayToken;
  if(!token)return reply(response,503,{error:"Ask Forge is waiting for its AI connection. The workout tracker and timer still work normally."});
 
  const body=request.body||{},question=typeof body.question==="string"?body.question.trim().slice(0,500):"",image=typeof body.image==="string"?body.image:null,exercise=body.exercise&&typeof body.exercise==="object"?body.exercise:{};
@@ -23,7 +25,11 @@ export default async function handler(request,response){
  const content=[{type:"text",text}];if(image)content.push({type:"image_url",image_url:{url:image}});
 
  try{
-  const gatewayResponse=await fetch("https://ai-gateway.vercel.sh/v1/chat/completions",{method:"POST",headers:{Authorization:`Bearer ${token}`,"Content-Type":"application/json","x-vercel-ai-gateway-user":"forge-single-user","x-vercel-ai-gateway-tags":"feature:ask-forge"},body:JSON.stringify({model:process.env.FORGE_AI_MODEL||"openai/gpt-5.4",messages:[{role:"system",content:system},{role:"user",content}],response_format:{type:"json_object"},max_tokens:350,temperature:.2})});
+  const endpoint=openAIKey?"https://api.openai.com/v1/chat/completions":"https://ai-gateway.vercel.sh/v1/chat/completions";
+  const model=process.env.FORGE_AI_MODEL||(openAIKey?"gpt-5.4":"openai/gpt-5.4");
+  const headers={Authorization:`Bearer ${token}`,"Content-Type":"application/json"};
+  if(!openAIKey){headers["x-vercel-ai-gateway-user"]="forge-single-user";headers["x-vercel-ai-gateway-tags"]="feature:ask-forge"}
+  const gatewayResponse=await fetch(endpoint,{method:"POST",headers,body:JSON.stringify({model,messages:[{role:"developer",content:system},{role:"user",content}],response_format:{type:"json_object"},max_completion_tokens:350})});
   const gatewayPayload=await gatewayResponse.json().catch(()=>({}));
   if(!gatewayResponse.ok){console.error("Ask Forge gateway error",gatewayResponse.status,gatewayPayload?.error?.message||"Unknown gateway error");const status=gatewayResponse.status===429?429:502;return reply(response,status,{error:status===429?"Forge is getting a lot of questions. Try again in a moment.":"Forge couldn’t check that right now. Your question is still here—please try again."})}
   const raw=gatewayPayload?.choices?.[0]?.message?.content;if(!raw)throw new Error("Empty AI response");

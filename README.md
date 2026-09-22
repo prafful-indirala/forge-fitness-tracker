@@ -31,6 +31,8 @@ Most fitness trackers make logging the workout harder than doing it. Forge is de
 ## Stack
 Vanilla HTML, CSS and JavaScript. Intentionally lightweight and deployable anywhere.
 
+Ask Forge uses `OPENAI_API_KEY` when configured in Vercel. It can also use `AI_GATEWAY_API_KEY` or Vercel OIDC through AI Gateway. `FORGE_AI_MODEL` is optional.
+
 ## Privacy
 Workout logs remain local in the browser using localStorage. Ask Forge sends only the current exercise context, the question and any explicitly attached machine photo to the configured AI service; photos are not stored by this app.
 
