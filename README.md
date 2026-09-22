@@ -11,6 +11,9 @@ Most fitness trackers make logging the workout harder than doing it. Forge is de
 - Day-aware training dashboard
 - Per-set weight and rep logging
 - Built-in rest timer
+- Spoken rest countdown with pause, skip and +30 second controls
+- Contextual Ask Forge coaching with optional machine-photo checks
+- One-tap exercise substitutions that remain attached to today's log
 - Workout completion progress
 - Recovery-day protocols
 - Daily protein, hydration, creatine and calorie adherence
@@ -23,13 +26,13 @@ Most fitness trackers make logging the workout harder than doing it. Forge is de
 - Previous-session set comparison
 - PR detection and progression suggestions
 - Training history and charts
-- Optional cloud sync / AI coaching layer
+- Optional cloud sync
 
 ## Stack
 Vanilla HTML, CSS and JavaScript. Intentionally lightweight and deployable anywhere.
 
 ## Privacy
-The current version stores training data locally in the browser using localStorage. No workout or physique data is uploaded to a server.
+Workout logs remain local in the browser using localStorage. Ask Forge sends only the current exercise context, the question and any explicitly attached machine photo to the configured AI service; photos are not stored by this app.
 
 ---
 Built as a focused personal fitness engineering project by Prafful Indirala.

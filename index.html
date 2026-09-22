@@ -1,3 +1,32 @@
 <!doctype html>
 <html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/><meta name="theme-color" content="#090b10"/><meta name="description" content="Forge — a focused, mobile-first training and progression tracker."/><title>Forge — Train. Track. Progress.</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="styles.css"/></head>
-<body><div class="ambient a1"></div><div class="ambient a2"></div><main id="app"></main><nav id="nav" class="nav"></nav><div id="toast" class="toast"></div><script src="app.js"></script></body></html>
+<body><div class="ambient a1"></div><div class="ambient a2"></div><main id="app"></main><nav id="nav" class="nav" aria-label="Primary navigation"></nav><div id="toast" class="toast" role="status" aria-live="polite"></div>
+<dialog id="forge-dialog" class="forge-dialog" aria-labelledby="forge-title">
+  <div class="forge-sheet">
+    <div class="sheet-handle" aria-hidden="true"></div>
+    <header class="forge-header">
+      <div><div class="eyebrow">YOUR GYM COPILOT</div><h2 id="forge-title">Ask Forge</h2></div>
+      <button type="button" class="close-sheet" onclick="closeForgeCoach()" aria-label="Close Ask Forge">×</button>
+    </header>
+    <div class="context-chip"><span aria-hidden="true">✦</span><div><small>ABOUT THIS EXERCISE</small><b id="forge-exercise-name"></b></div></div>
+    <div class="quick-prompts" aria-label="Suggested questions">
+      <button type="button" data-prompt="This machine is busy. What can I do instead?" onclick="usePrompt(this)">Machine busy</button>
+      <button type="button" data-prompt="Is this machine suitable for this exercise?" onclick="usePrompt(this)">Check a machine</button>
+      <button type="button" data-prompt="How should I set up the seat, handles and range of motion?" onclick="usePrompt(this)">Setup & form</button>
+    </div>
+    <form id="forge-form" novalidate onsubmit="askForge(event)">
+      <label for="forge-question">What do you need?</label>
+      <textarea id="forge-question" class="resize-none" maxlength="500" rows="3" placeholder="e.g. We only have this machine—can I use it instead?"></textarea>
+      <div class="photo-row">
+        <label for="forge-photo" class="photo-button"><span aria-hidden="true">▣</span> Add machine photo</label>
+        <input id="forge-photo" class="visually-hidden" type="file" accept="image/jpeg,image/png,image/webp" capture="environment" onchange="handleForgePhoto(this)">
+        <small>JPG, PNG or WebP · max 10 MB</small>
+      </div>
+      <div id="forge-preview" class="forge-preview"></div>
+      <div id="forge-answer" class="forge-answer" aria-live="polite"></div>
+      <button id="forge-submit" type="submit" class="forge-submit">Ask Forge</button>
+    </form>
+    <p class="forge-disclaimer">Forge can help with substitutions and setup, but it cannot assess pain or diagnose injuries.</p>
+  </div>
+</dialog>
+<script src="app.js"></script></body></html>
